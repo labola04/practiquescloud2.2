@@ -20,35 +20,7 @@ L'objectiu d'aquesta pràctica és desplegar de manera completament automatitzad
 
 La infraestructura desplegada consta d'una VPC pròpia (`VPC-03`) dividida en dues subxarxes públiques ubicades en dues Availability Zones diferents (`us-east-1a` i `us-east-1b`), connectades a Internet mitjançant un Internet Gateway i una taula d'encaminament pública compartida.
 
-```mermaid
-flowchart TB
-    Internet["Internet (0.0.0.0/0)"]
-    LocalPC["Terminal local<br/>SSH (TCP/22): Permès<br/>ICMP (ping): Bloquejat"]
-
-    subgraph AWS["AWS Regió: us-east-1"]
-        subgraph VPC["VPC-03 (10.0.0.0/16) — DNS Support & Hostnames"]
-            IGW["Internet Gateway<br/>IGW-VPC-03"]
-            RT["Public Route Table<br/>10.0.0.0/16 → local<br/>0.0.0.0/0 → IGW-VPC-03"]
-
-            subgraph SG["Security Group: vpc-03-sg (SG-VPC-03)"]
-                subgraph SubA["Public Subnet A (10.0.1.0/24) — us-east-1a"]
-                    EC2A["ec2-a (t3.micro)<br/>Privada: 10.0.1.21<br/>Pública: 44.192.99.188"]
-                end
-
-                subgraph SubB["Public Subnet B (10.0.2.0/24) — us-east-1b"]
-                    EC2B["ec2-b (t3.micro)<br/>Privada: 10.0.2.4<br/>Pública: 35.174.173.147"]
-                end
-            end
-        end
-    end
-
-    LocalPC --> Internet
-    Internet <--> IGW
-    IGW <--> RT
-    RT <--> SubA
-    RT <--> SubB
-    EC2A <-->|"ICMP intern permès (10.0.0.0/16)"| EC2B
-```
+![Esquema d'arquitectura AWS (draw.io)](./assets/00-arquitectura.png)
 
 ### Resum dels recursos creats
 
@@ -74,6 +46,8 @@ pt2-2/
 ├── outputs.tf
 ├── README.md
 └── assets/
+    ├── 00-arquitectura.drawio
+    ├── 00-arquitectura.png
     ├── 01-vpc.png
     ├── 02-subnets.png
     ├── 02-subnets-b.png
